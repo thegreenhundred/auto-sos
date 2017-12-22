@@ -52,37 +52,25 @@ xsos_RUN () {
 	   && xsos_COMPILE_ADD
 }
 
-# Run and background xsos_RUN
-# Allows for paralell processing
-xsos_START () {
-
-pids=""
-RESULT=0
-
-for i in `seq 0 9`; do
-	xsos_RUN $i &
-     pids="$pids $!"
-  done
-
-  for pid in $pids; do
-     wait $pid || let "RESULT=1"
-  done
-
-  if [ "$RESULT" == "1" ];
-      then
-   exit 1
-fi
-xsos_FINISHED
-}
-
 # Search for all valid sosreport extracted in the working directory
 sosreport_FIND () {
-	echo "Searching for sosreports in this directory...." 
+echo "Searching for sosreports in this directory...." 
+    pids=""
+    RESULT=0
         for dir in $(ls $START_DIR | grep sosreport ); do
-		echo "Found $dir" 
-		$NUM=$($NUM+1)
-		xsos_START 
+            echo "Found $dir" 
+	        $NUM=$(( $NUM + 1 ))
+		xsos_RUN $i &
+	        pids="$pids $!"
     done
+        for pid in $pids; do
+            wait $pid || let "RESULT=1"
+    done
+        if [ "$RESULT" == "1" ];
+            then
+                exit 1
+fi
+xsos_FINISHED
 }
 
 # Remove any possible pre-existing xsos logs
