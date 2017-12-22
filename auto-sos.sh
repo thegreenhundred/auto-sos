@@ -1,5 +1,5 @@
 #!/bin/sh
-# AUTO SOS
+# AUTO SOS - v0.20.a
 # This script will help to automate mass sosreport analysis.
 # To Use:
 # (a)   Add all needed sosreports to a single directory
